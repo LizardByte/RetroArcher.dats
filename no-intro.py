@@ -1,5 +1,6 @@
 from time import sleep
 from selenium import webdriver
+from selenium.webdriver.support.ui import Select
 from selenium.common.exceptions import NoSuchElementException
 import hashlib
 import os
@@ -15,8 +16,8 @@ regex = {
 }
 
 no_intro_type = {
-    'standard': 1,
-    'parent-clone': 2
+    'standard': 'standard',
+    'parent-clone': 'xml'
 }
 
 for key, value in no_intro_type.items():
@@ -43,9 +44,13 @@ for key, value in no_intro_type.items():
         # select daily downloads
         driver.find_element_by_xpath('/html/body/div/section/article/table[1]/tbody/tr/td/a[6]').click()
 
-        # select the type of dat file
-        dropdown_items = driver.find_element_by_xpath('/html/body/div/section/article/div/form/select')
-        dropdown_items.get(value).click()
+        # find the type of dat file
+        x = driver.find_element_by_name('dat_type')
+        drop = Select(x)
+
+        # Select by value
+        drop.select_by_value(value)
+        sleep(5)
 
         # click the prepare button
         driver.find_element_by_xpath(f'/html/body/div/section/article/div/form/input[1]').click()
