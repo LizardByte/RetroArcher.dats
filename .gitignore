@@ -136,3 +136,4 @@ dmypy.json
 *.xml
 *.json
 *.dat
+geckodriver.exe
