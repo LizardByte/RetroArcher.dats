@@ -24,13 +24,13 @@ jobs:
             python -m pip install --upgrade pip
             pip install -r requirements.txt
 
-        - name: Download dats and generate profile.xml
+        - name: Download dats and generate xmls (No-intro)
+            id: generator_no_intro
+            run: python no-intro.py
+
+        - name: Download dats and generate xmls (Redump)
           id: generator_redump
           run: python redump.py
-
-        - name: Download dats and generate profile.xml
-          id: generator_no_intro
-          run: python no-intro.py
 
         - name: Upload assets to release
           uses: meeDamian/github-release@2.0
@@ -43,5 +43,7 @@ jobs:
             files: >
                 redump.xml
                 redump.zip
-                no-intro.xml
-                no-intro.zip
+                no-intro (standard).xml
+                no-intro (standard).zip
+                no-intro (parent-clone).xml
+                no-intro (parent-clone).zip
