@@ -36,10 +36,19 @@ for key, value in no_intro_type.items():
         driver.implicitly_wait(10)
 
         driver.get("https://datomatic.no-intro.org")
+
+        # select downloads
         driver.find_element_by_xpath('/html/body/div/header/nav/ul/li[3]/a').click()
+
+        # select daily downloads
         driver.find_element_by_xpath('/html/body/div/section/article/table[1]/tbody/tr/td/a[6]').click()
-        driver.find_element_by_xpath(f'/html/body/div/section/article/div/form/input[{value}]').click()
-        #driver.find_element_by_xpath('/html/body/div/section/article/div/form/input').click()
+
+        # select the type of dat file
+        dropdown_items = driver.findElements_by_xpath('/html/body/div/section/article/div/form/select/value')
+        dropdown_items.get(value).click()
+
+        # click the prepare button
+        driver.find_element_by_xpath(f'/html/body/div/section/article/div/form/input[1]').click()
 
         captcha = False
 
