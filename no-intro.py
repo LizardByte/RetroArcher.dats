@@ -13,7 +13,6 @@ regex = {
     'name': r'(.*?.)( \([0-9]{8}-[0-9]*\).dat)',
     'filename': r'filename="(.*?)"',
 }
-xml_filename = 'no-intro.xml'
 
 no_intro_type = {
     'standard': 1,
@@ -137,5 +136,6 @@ for key, value in no_intro_type.items():
 
         # store clrmamepro XML file
         xmldata = ET.tostring(tag_clrmamepro).decode()
+        xml_filename = f'no-intro ({key}).xml'
         xmlfile = open(xml_filename, 'w')
         xmlfile.write(xmldata)
