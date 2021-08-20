@@ -1,8 +1,5 @@
-from datetime import date
-from io import BytesIO
 from time import sleep
 from selenium import webdriver
-import logging
 import os
 import re
 import xml.etree.ElementTree as ET
@@ -15,6 +12,11 @@ regex = {
 }
 xml_filename = 'no-intro.xml'
 
+no_intro_type = {
+    'standard': 1,
+    'parent-clone': 2
+}
+
 # Dowload no-intro pack using selenium
 dir_path = os.path.dirname(os.path.realpath(__file__))
 fx_profile = webdriver.FirefoxProfile();
@@ -26,73 +28,76 @@ fx_profile.set_preference("browser.helperApps.neverAsk.saveToDisk", "application
 options = webdriver.FirefoxOptions()
 options.headless = True
 
-driver = webdriver.Firefox(firefox_profile=fx_profile, options=options);
-driver.implicitly_wait(10)
+for key, value in no_intro_type.items():
+    driver = webdriver.Firefox(firefox_profile=fx_profile, options=options);
+    driver.implicitly_wait(10)
 
-driver.get("https://datomatic.no-intro.org")
-driver.find_element_by_xpath('/html/body/div/header/nav/ul/li[3]/a').click()
-driver.find_element_by_xpath('/html/body/div/section/article/table[1]/tbody/tr/td/a[6]').click()
-driver.find_element_by_xpath('/html/body/div/section/article/div/form/input[1]').click()
-driver.find_element_by_xpath('/html/body/div/section/article/div/form/input').click()
+    driver.get("https://datomatic.no-intro.org")
+    driver.find_element_by_xpath('/html/body/div/header/nav/ul/li[3]/a').click()
+    driver.find_element_by_xpath('/html/body/div/section/article/table[1]/tbody/tr/td/a[6]').click()
+    driver.find_element_by_xpath(f'/html/body/div/section/article/div/form/input[{value}]').click()
+    driver.find_element_by_xpath('/html/body/div/section/article/div/form/input').click()
 
-# wait until file is found
-found = False
-name = None
-time_slept = 0
-while not found:
-    if time_slept > 360:
-        raise Exception('No-Intro zip file not found')
+    # wait until file is found
+    found = False
+    name = None
+    time_slept = 0
+    while not found:
+        if time_slept > 360:
+            raise Exception(f'No-Intro {key} zip file not found')
 
-    for f in os.listdir(dir_path):
-        if 'No-Intro Love Pack' in f:
-            name = f
-            found = True
-            break
+        for f in os.listdir(dir_path):
+            if 'No-Intro Love Pack' in f:
+                name = f
+                found = True
+                break
 
-    # wait 5 seconds
-    sleep(5)
-    time_slept += 5
+        # wait 5 seconds
+        sleep(5)
+        time_slept += 5
 
-os.rename(name, f'{dir_path}/no-intro.zip')
+    archive_name = f'no-intro ({key}).zip'
+    archive_full = f'{dir_path}/{archive_name}'
+    os.rename(name, archive_full)
 
-# load zip file
-archive = zipfile.ZipFile(f'{dir_path}/no-intro.zip')
+    # load zip file
+    archive = zipfile.ZipFile(archive_full)
 
-# clrmamepro XML file
-tag_clrmamepro = ET.Element('clrmamepro')
-for dat in archive.namelist():
-    print(dat)
-    # section for this dat in the XML file
-    tag_datfile = ET.SubElement(tag_clrmamepro, 'datfile')
+    # clrmamepro XML file
+    tag_clrmamepro = ET.Element('clrmamepro')
+    for dat in archive.namelist():
+        print(dat)
+        # section for this dat in the XML file
+        tag_datfile = ET.SubElement(tag_clrmamepro, 'datfile')
 
-    # XML version
-    dat_date = re.findall(regex['date'], dat)[0]
-    ET.SubElement(tag_datfile, 'version').text = dat_date
-    print(dat_date)
+        # XML version
+        dat_date = re.findall(regex['date'], dat)[0]
+        ET.SubElement(tag_datfile, 'version').text = dat_date
+        print(dat_date)
 
-    # XML name & description
-    tempName = re.findall(regex['name'], dat)[0][0]
-    ET.SubElement(tag_datfile, 'name').text = tempName
-    ET.SubElement(tag_datfile, 'description').text = tempName
-    print(tempName)
+        # XML name & description
+        tempName = re.findall(regex['name'], dat)[0][0]
+        ET.SubElement(tag_datfile, 'name').text = tempName
+        ET.SubElement(tag_datfile, 'description').text = tempName
+        print(tempName)
 
-    # URL tag in XML
-    ET.SubElement(
-        tag_datfile, 'url').text = f'https://github.com/hugo19941994/auto-datfile-generator/releases/download/latest/no-intro.zip'
+        # URL tag in XML
+        ET.SubElement(
+            tag_datfile, 'url').text = f'https://github.com/retroarcher-resarch/dats/releases/download/latest/{archive_name}'
 
-    # File tag in XML
-    fileName = dat
-    fileName = f'{fileName[:-4]}.dat'
-    ET.SubElement(tag_datfile, 'file').text = fileName
-    print(fileName)
+        # File tag in XML
+        fileName = dat
+        fileName = f'{fileName[:-4]}.dat'
+        ET.SubElement(tag_datfile, 'file').text = fileName
+        print(fileName)
 
-    # Author tag in XML
-    ET.SubElement(tag_datfile, 'author').text = 'no-intro.org'
+        # Author tag in XML
+        ET.SubElement(tag_datfile, 'author').text = 'no-intro.org'
 
-    # Command XML tag
-    ET.SubElement(tag_datfile, 'comment').text = '_'
+        # Command XML tag
+        ET.SubElement(tag_datfile, 'comment').text = '_'
 
-# store clrmamepro XML file
-xmldata = ET.tostring(tag_clrmamepro).decode()
-xmlfile = open(xml_filename, 'w')
-xmlfile.write(xmldata)
+    # store clrmamepro XML file
+    xmldata = ET.tostring(tag_clrmamepro).decode()
+    xmlfile = open(xml_filename, 'w')
+    xmlfile.write(xmldata)

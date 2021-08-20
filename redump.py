@@ -1,6 +1,5 @@
 import zipfile
 from io import BytesIO
-from datetime import date
 from time import sleep
 import xml.etree.ElementTree as ET
 import re

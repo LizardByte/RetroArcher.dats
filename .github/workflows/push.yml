@@ -1,9 +1,9 @@
-name: Daily WWW clrmamepro profiles
+name: Daily dat files
 
 on:
     push:
     schedule:
-        - cron:  '0 12 * * *'
+        - cron:  '0 4 * * *'
 
 jobs:
     build:
@@ -16,25 +16,20 @@ jobs:
         - name: Setup Python
           uses: actions/setup-python@v2
           with:
-            python-version: 3.8
+            python-version: 3.9.6
 
-        - name: Install pipenv
-          run: sudo pip install pipenv
-
-        - name: Install dependencies using Pipenv
-          run: pipenv install --deploy
+        - name: Install python requirements
+          run: |
+            python -m pip install --upgrade pip
+            pip install requirements.txt
 
         - name: Download dats and generate profile.xml
           id: generator_redump
-          run: pipenv run python3 redump.py
+          run: python redump.py
 
         - name: Download dats and generate profile.xml
           id: generator_no_intro
-          run: pipenv run python3 no-intro.py
-
-        - name: Download dats and generate profile.xml
-          id: generator_smdb
-          run: pipenv run python3 smdb.py
+          run: python no-intro.py
 
         - name: Upload assets to release
           uses: meeDamian/github-release@2.0
@@ -48,6 +43,4 @@ jobs:
                 redump.xml
                 redump.zip
                 no-intro.xml
-                smdb.zip
-                smdb.xml
                 no-intro.zip
