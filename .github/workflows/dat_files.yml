@@ -25,8 +25,8 @@ jobs:
             pip install -r requirements.txt
 
         - name: Download dats and generate xmls (No-intro)
-            id: generator_no_intro
-            run: python no-intro.py
+          id: generator_no_intro
+          run: python no-intro.py
 
         - name: Download dats and generate xmls (Redump)
           id: generator_redump
