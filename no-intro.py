@@ -1,7 +1,10 @@
 from time import sleep
 from selenium import webdriver
+from selenium.common.exceptions import NoSuchElementException
+import hashlib
 import os
 import re
+import requests
 import xml.etree.ElementTree as ET
 import zipfile
 
@@ -18,10 +21,7 @@ no_intro_type = {
 }
 
 for key, value in no_intro_type.items():
-    x = 0
-    found = False
 
-    while not found and x < 5:
         # Dowload no-intro pack using selenium
         dir_path = os.path.dirname(os.path.realpath(__file__))
         fx_profile = webdriver.FirefoxProfile();
@@ -40,17 +40,49 @@ for key, value in no_intro_type.items():
         driver.find_element_by_xpath('/html/body/div/header/nav/ul/li[3]/a').click()
         driver.find_element_by_xpath('/html/body/div/section/article/table[1]/tbody/tr/td/a[6]').click()
         driver.find_element_by_xpath(f'/html/body/div/section/article/div/form/input[{value}]').click()
-        driver.find_element_by_xpath('/html/body/div/section/article/div/form/input').click()
+        #driver.find_element_by_xpath('/html/body/div/section/article/div/form/input').click()
+
+        captcha = False
+
+        try:
+            captcha_image = driver.find_element_by_xpath('/html/body/div/section/article/div/form/img').get_attribute(
+                'src')
+            captcha = True
+        except NoSuchElementException:
+            pass
+
+        if not captcha:
+            try:
+                driver.find_element_by_name('dwnl').click()
+            except NoSuchElementException:
+                continue
+        else:
+            # download the captcha image
+            image = requests.get(captcha_image, stream=True).raw
+
+            # hash the image
+            hasher = hashlib.md5()
+            buf = image.read()
+            hasher.update(buf)
+            hash = hasher.hexdigest()
+
+            hash_map = {
+                '402240d761cb146915b25a01c771c6a9': 'dwnl_blue',
+                '3fe379d46842ffed389aa9bbeb42bb93': 'dwnl_red',
+                '1e3ad98f1290f8ba0d3fc21f313f5396': 'dwnl_yellow'
+            }
+
+            # click the correct captcha color coded download button
+            driver.find_element_by_name(hash_map[hash]).click()
+
 
         # wait until file is found
+        found = False
         name = None
         time_slept = 0
         while not found:
-            if time_slept > 360 and x == 4:
+            if time_slept > 360:
                 raise Exception(f'No-Intro {key} zip file not found')
-            elif time_slept > 360:
-                x += 1
-                continue
 
             for f in os.listdir(dir_path):
                 if 'No-Intro Love Pack' in f:
