@@ -44,7 +44,7 @@ for key, value in no_intro_type.items():
         driver.find_element_by_xpath('/html/body/div/section/article/table[1]/tbody/tr/td/a[6]').click()
 
         # select the type of dat file
-        dropdown_items = driver.find_element_by_xpath('/html/body/div/section/article/div/form/select/value')
+        dropdown_items = driver.find_element_by_xpath('/html/body/div/section/article/div/form/select')
         dropdown_items.get(value).click()
 
         # click the prepare button
