@@ -1,7 +1,9 @@
-name: Daily dat files
+name: Daily build
 
 on:
     push:
+      branches:
+        - master
     schedule:
         - cron:  '0 4 * * *'
     workflow_dispatch:

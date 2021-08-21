@@ -1,5 +1,5 @@
 # Auto DAT file generator
-[![Daily dat files](https://github.com/RetroArcher/RetroArcher.dats/actions/workflows/dat_files.yml/badge.svg)](https://github.com/RetroArcher/RetroArcher.dats/actions/workflows/dat_files.yml)
+[![Daily build](https://github.com/RetroArcher/RetroArcher.dats/actions/workflows/daily_build.yml/badge.svg)](https://github.com/RetroArcher/RetroArcher.dats/actions/workflows/daily_build.yml)
 
 Dat files for standard No-Intro, parent/clone No-Intro, and Redump sets.
 
