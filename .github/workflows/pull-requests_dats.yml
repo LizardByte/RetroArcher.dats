@@ -10,7 +10,7 @@ jobs:
 
     steps:
       - name: Fail Workflow
-        if: github.base_ref != 'nightly'
+        if: github.base_ref != 'nightly' || ( github.base_ref != 'master' && github.head_ref != 'nightly' )
         run: |
           echo Base: "$GITHUB_BASE_REF"
           echo Head: "$GITHUB_HEAD_REF"
