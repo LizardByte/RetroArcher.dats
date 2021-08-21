@@ -33,7 +33,7 @@ jobs:
           run: python redump.py
 
         - name: Upload assets to release
-          uses: meeDamian/github-release@2.0
+          uses: meeDamian/github-release@2.0.3
           with:
             token: ${{ secrets.GITHUB_TOKEN }}
             tag: latest
