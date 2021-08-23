@@ -21,12 +21,8 @@ jobs:
           repo-token-user-login: 'github-actions[bot]'
 
       - name: Fail Workflow
-        if: github.base_ref != 'nightly' || ( github.base_ref != 'master' && github.head_ref != 'nightly' )
+        if: github.head_ref != 'repo-sync/common-repo-files/default' || github.base_ref != 'nightly' || ( github.base_ref != 'master' && github.head_ref != 'nightly' )
         run: |
-          echo base: "$github_base_ref"
-          echo head: "$github_head_ref"
-          echo event base: "$github_event_pull_request_base_ref"
-          echo event head: "$github_event_pull_request_head_ref"
           echo Base: "$GITHUB_BASE_REF"
           echo Head: "$GITHUB_HEAD_REF"
           exit 1
