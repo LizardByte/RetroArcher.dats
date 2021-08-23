@@ -9,8 +9,15 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Branch check
+        if: ( github.head_ref == 'repo-sync/common-repo-files/default' && github.base_ref == 'master' ) || ( github.head_ref == 'nightly' && github.base_ref == 'master' )
+        run: |
+          echo Base: "$GITHUB_BASE_REF"
+          echo Head: "$GITHUB_HEAD_REF"
+          echo "branch=True" >> $GITHUB_ENV
+
       - name: Fail Workflow
-        if: github.base_ref != 'nightly' || ( github.base_ref != 'master' && github.head_ref != 'nightly' )
+        if: github.base_ref != 'nightly' && env.branch != 'True'
         run: |
           echo Base: "$GITHUB_BASE_REF"
           echo Head: "$GITHUB_HEAD_REF"
@@ -29,10 +36,10 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Download dats and generate xmls (No-intro)
+      - name: Build No-intro
         id: generator_no_intro
         run: python no-intro.py
 
-      - name: Download dats and generate xmls (Redump)
+      - name: Build Redump
         id: generator_redump
         run: python redump.py
