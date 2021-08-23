@@ -6,9 +6,12 @@ on:
 
 jobs:
   build:
+    name: Build dat archives
     runs-on: ubuntu-latest
-
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        
       - name: Branch check
         if: ( github.head_ref == 'repo-sync/common-repo-files/default' && github.base_ref == 'master' ) || ( github.head_ref == 'nightly' && github.base_ref == 'master' )
         run: |
@@ -22,9 +25,6 @@ jobs:
           echo Base: "$GITHUB_BASE_REF"
           echo Head: "$GITHUB_HEAD_REF"
           exit 1
-
-      - name: Checkout code
-        uses: actions/checkout@v2
 
       - name: Setup Python
         uses: actions/setup-python@v2
