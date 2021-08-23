@@ -23,10 +23,10 @@ jobs:
       - name: Fail Workflow
         if: github.base_ref != 'nightly' || ( github.base_ref != 'master' && github.head_ref != 'nightly' )
         run: |
-          echo base: "$github.base_ref"
-          echo head: "$github.head_ref"
-          echo event base: "$github.event.pull_request.base.ref"
-          echo event head: "$github.event.pull_request.head.ref"
+          echo base: "$github_base_ref"
+          echo head: "$github_head_ref"
+          echo event base: "$github_event_pull_request_base_ref"
+          echo event head: "$github_event_pull_request_head_ref"
           echo Base: "$GITHUB_BASE_REF"
           echo Head: "$GITHUB_HEAD_REF"
           exit 1
