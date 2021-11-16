@@ -5,7 +5,7 @@ on:
       branches:
         - master
     schedule:
-        - cron:  '0 0 * * *'
+        - cron:  '0 5 * * *'
     workflow_dispatch:
 
 jobs:
@@ -40,17 +40,14 @@ jobs:
           run: python redump.py
 
         - name: Create release
-          uses: meeDamian/github-release@2.0
+          uses: softprops/action-gh-release@v1
           with:
-            token: ${{ secrets.GITHUB_TOKEN }}
-            tag: ${{ env.timestamp }}
             name: ${{ env.timestamp }}
-            allow_override: true
-            gzip: false
-            files: >
-                no-intro(standard).xml
-                no-intro(standard).zip
-                no-intro(parent-clone).xml
-                no-intro(parent-clone).zip
-                redump.xml
-                redump.zip
+            tag_name: ${{ env.timestamp }}
+            files: |
+              no-intro(standard).xml
+              no-intro(standard).zip
+              no-intro(parent-clone).xml
+              no-intro(parent-clone).zip
+              redump.xml
+              redump.zip
