@@ -39,6 +39,10 @@ jobs:
           id: generator_redump
           run: python redump.py
 
+        - name: Testing
+          run: |
+            ls
+
 #        - name: Create release
 #          uses: softprops/action-gh-release@v1
 #          with:
