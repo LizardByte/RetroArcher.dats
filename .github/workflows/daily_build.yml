@@ -13,10 +13,10 @@ jobs:
         runs-on: ubuntu-latest
 
         steps:
-        - name: Set workflow variables
-          id: step_one
-          run: |
-            echo "timestamp=$(date +%s)" >> $GITHUB_ENV
+#        - name: Set workflow variables
+#          id: step_one
+#          run: |
+#            echo "timestamp=$(date +%s)" >> $GITHUB_ENV
 
         - name: Checkout code
           uses: actions/checkout@v2
@@ -39,15 +39,24 @@ jobs:
           id: generator_redump
           run: python redump.py
 
+#        - name: Create release
+#          uses: softprops/action-gh-release@v1
+#          with:
+#            name: ${{ env.timestamp }}
+#            tag_name: ${{ env.timestamp }}
+#            files: |
+#              no-intro(standard).xml
+#              no-intro(standard).zip
+#              no-intro(parent-clone).xml
+#              no-intro(parent-clone).zip
+#              redump.xml
+#              redump.zip
+
         - name: Create release
-          uses: softprops/action-gh-release@v1
+          uses: svenstaro/upload-release-action@v2
           with:
-            name: ${{ env.timestamp }}
-            tag_name: ${{ env.timestamp }}
-            files: |
-              no-intro(standard).xml
-              no-intro(standard).zip
-              no-intro(parent-clone).xml
-              no-intro(parent-clone).zip
-              redump.xml
-              redump.zip
+            repo_token: ${{ secrets.GITHUB_TOKEN }}
+            file: *+(.xml|.zip)
+            tag: Nightly
+            overwrite: true
+            file_glob: true
