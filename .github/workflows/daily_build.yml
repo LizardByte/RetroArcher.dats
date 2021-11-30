@@ -13,11 +13,6 @@ jobs:
         runs-on: ubuntu-latest
 
         steps:
-#        - name: Set workflow variables
-#          id: step_one
-#          run: |
-#            echo "timestamp=$(date +%s)" >> $GITHUB_ENV
-
         - name: Checkout code
           uses: actions/checkout@v2
 
@@ -31,33 +26,21 @@ jobs:
             python -m pip install --upgrade pip
             pip install -r requirements.txt
 
-        - name: Download dats and generate xmls (No-intro)
+        - name: Get No-intro
           id: generator_no_intro
           run: python no-intro.py
 
-        - name: Download dats and generate xmls (Redump)
+        - name: Get Redump
           id: generator_redump
           run: python redump.py
 
-#        - name: Create release
-#          uses: softprops/action-gh-release@v1
-#          with:
-#            name: ${{ env.timestamp }}
-#            tag_name: ${{ env.timestamp }}
-#            files: |
-#              no-intro(standard).xml
-#              no-intro(standard).zip
-#              no-intro(parent-clone).xml
-#              no-intro(parent-clone).zip
-#              redump.xml
-#              redump.zip
-
         - name: Create release
-          uses: svenstaro/upload-release-action@v2
+          uses: softprops/action-gh-release@v1
           with:
-            repo_token: ${{ secrets.GITHUB_TOKEN }}
-            file: "*+(.xml|.zip)"
-            tag: Nightly
-            overwrite: true
-            file_glob: true
+            name: Nightly
+            tag_name: Nightly
+            files: |
+              *.xml
+              *.zip
+            fail_on_unmatched_files: true
             body: Released by github actions
