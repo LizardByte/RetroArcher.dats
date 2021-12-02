@@ -40,7 +40,6 @@ jobs:
             name: Nightly
             tag: Nightly
             artifacts: "*.xml,*.zip"
-            bodyFile: "body.md"
             token: ${{ secrets.GITHUB_TOKEN }}
             allowUpdates: true
             body: Released by github actions
