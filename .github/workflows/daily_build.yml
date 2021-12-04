@@ -9,7 +9,7 @@ on:
     workflow_dispatch:
 
 jobs:
-    setup:
+    build:
         runs-on: ubuntu-latest
 
         steps:
@@ -26,26 +26,14 @@ jobs:
             python -m pip install --upgrade pip
             pip install -r requirements.txt
 
-    no_intro:
-        runs-on: ubuntu-latest
-        needs: setup
-        steps:
         - name: Get No-intro
           id: generator_no_intro
           run: python no-intro.py
 
-    redump:
-        runs-on: ubuntu-latest
-        needs: setup
-        steps:
         - name: Get Redump
           id: generator_redump
           run: python redump.py
 
-    release:
-        runs-on: ubuntu-latest
-        needs: [no_intro, redump]
-        steps:
         - name: Create release
           uses: ncipollo/release-action@v1
           with:
