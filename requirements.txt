@@ -1,4 +1,4 @@
-requests==2.26.0
+requests==2.27.0
 lxml==4.6.3
 chardet==4.0.0
 selenium==3.141.0
