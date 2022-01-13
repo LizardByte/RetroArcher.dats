@@ -1,4 +1,4 @@
-name: Nightly
+name: Build
 
 on:
   pull_request:
@@ -18,10 +18,10 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v2  # https://github.com/actions/checkout
 
     - name: Setup Python
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v2  # https://github.com/actions/setup-python
       with:
         python-version: 3.9.6
 
@@ -35,7 +35,7 @@ jobs:
 
     - name: Create release
       if: ${{ github.event_name == 'push' || github.event_name == 'schedule' }}
-      uses: ncipollo/release-action@v1
+      uses: ncipollo/release-action@v1  # https://github.com/ncipollo/release-action
       with:
         name: Nightly
         tag: Nightly
@@ -47,7 +47,9 @@ jobs:
 
     - name: Upload Artifacts
       if: ${{ github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch' }}
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v2  # https://github.com/actions/upload-artifact
       with:
         name: ${{ matrix.script }}
-        path: "*.xml,*.zip"
+        path: |
+          *.xml
+          *.zip
