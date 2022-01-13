@@ -1,5 +1,5 @@
 # RetroArcher.dats
-[![Nightly](https://github.com/RetroArcher/RetroArcher.dats/actions/workflows/nightly.yml/badge.svg)](https://github.com/RetroArcher/RetroArcher.dats/actions/workflows/nightly.yml)
+[![Build](https://github.com/RetroArcher/RetroArcher.dats/actions/workflows/build.yml/badge.svg)](https://github.com/RetroArcher/RetroArcher.dats/actions/workflows/build.yml)
 
 - Dat files for standard No-Intro, parent/clone No-Intro, and Redump sets.
 - Refreshes once every 24h automatically.
