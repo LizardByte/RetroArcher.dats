@@ -48,7 +48,7 @@ jobs:
 
     - name: Upload Artifacts
       if: ${{ github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch' }}
-      uses: actions/upload-artifact@v3  # https://github.com/actions/upload-artifact
+      uses: actions/upload-artifact@v4  # https://github.com/actions/upload-artifact
       with:
         name: ${{ matrix.script }}
         path: |
